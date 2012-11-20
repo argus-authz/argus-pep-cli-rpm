@@ -18,14 +18,15 @@
 # RPM packaging
 #
 name = argus-pep-cli
+rpm_name = argus-pepcli
 version = 2.2.0
 release = 1
 
 git_url = https://github.com/argus-authz/$(name).git
 git_branch = EMI-3
 
-dist_url = https://github.com/downloads/argus-authz/$(name)/$(name)-$(version).tar.gz
-spec_file = fedora/$(name).spec
+dist_url = https://github.com/downloads/argus-authz/$(name)/$(rpm_name)-$(version).tar.gz
+spec_file = fedora/$(rpm_name).spec
 rpmbuild_dir = $(CURDIR)/rpmbuild
 
 all: srpm
@@ -43,7 +44,7 @@ spec:
 pre_rpmbuild: spec
 	@echo "Preparing for rpmbuild in $(rpmbuild_dir)"
 	mkdir -p $(rpmbuild_dir)/BUILD $(rpmbuild_dir)/RPMS $(rpmbuild_dir)/SOURCES $(rpmbuild_dir)/SPECS $(rpmbuild_dir)/SRPMS
-	test -f $(rpmbuild_dir)/SOURCES/$(name)-$(version).tar.gz || wget -P $(rpmbuild_dir)/SOURCES $(dist_url)
+	test -f $(rpmbuild_dir)/SOURCES/$(rpm_name)-$(version).tar.gz || wget -P $(rpmbuild_dir)/SOURCES $(dist_url)
 
 
 srpm: pre_rpmbuild
@@ -62,6 +63,6 @@ git_source:
 	@echo "Checkout source from $(git_url)"
 	git clone $(git_url)
 	(cd $(name) && git checkout $(git_branch))
-	(cd $(name) && make dist)
+	(cd $(name) && ./autotools.sh && ./configure && make dist)
 	mkdir -p $(rpmbuild_dir)/SOURCES
-	cp $(name)/$(name)-$(version).tar.gz $(rpmbuild_dir)/SOURCES
+	cp $(name)/$(rpm_name)-$(version).tar.gz $(rpmbuild_dir)/SOURCES
