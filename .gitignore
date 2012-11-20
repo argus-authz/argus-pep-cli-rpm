@@ -1,3 +1,4 @@
 /*.rpm
 /fedora/argus-pepcli.spec
 /rpmbuild
+/argus-pep-cli
